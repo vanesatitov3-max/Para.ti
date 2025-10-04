@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Para mi bonito 💙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap">
+
+  <style>
+    * { box-sizing: border-box; }
+    :root{
+      /* Paleta romántica: burdeos profundo + dorado cálido */
+      --bg-overlay: rgba(8,6,10,0.55);
+      --accent-start: #7a1526; /* burdeos oscuro */
+      --accent-end: #b86b2b;   /* dorado cálido */
+      --accent-contrast: #fff8f2; /* blanco cálido */
+      --card-bg: rgba(255,250,245,0.95); /* muy ligero crema */
+      --muted: #2b2030; /* texto principal oscuro, elegante */
+      --glass: rgba(0,0,0,0.06);
+      /* nuevos colores para botones: morado a celeste */
+      --btn-start: #6b2fa3; /* morado profundo */
+      --btn-end: #3ec5d6;   /* celeste brillante */
+      --btn-focus: rgba(62,197,214,0.18);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background-image: url('images/fondo.jpg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-color: #0b0f1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      color: var(--accent-contrast);
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* capa oscura para mejorar legibilidad */
+    body::before{
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: var(--bg-overlay);
+      pointer-events: none;
+    }
+
+    .visually-hidden{ /* utilidad accesible */
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap; border: 0; padding: 0; margin: -1px;
+    }
+
+    .card, .envelope, .sad, .extra {
+      display: none;
+      z-index: 2;
+    }
+
+    .active {
+      display: block;
+      animation: fadeIn 450ms ease-in-out;
+    }
+
+    img {
+      width: 250px;
+      max-width: 90vw;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      display: block;
+      margin: 0 auto 16px;
+    }
+
+    .controls{ display:flex; justify-content:center; gap:12px; margin-top:10px; }
+
+    .btn {
+      background: linear-gradient(135deg,var(--btn-start),var(--btn-end));
+      border: 1px solid rgba(0,0,0,0.08);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 10px 36px rgba(24,8,64,0.22);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease, opacity .14s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn:focus{ outline: 3px solid var(--btn-focus); }
+
+    .btn:hover{ transform: translateY(-3px); box-shadow: 0 14px 44px rgba(18,12,60,0.28); filter: saturate(1.06); }
+
+    .card {
+      background: var(--card-bg);
+      color: var(--muted);
+      padding: 24px;
+      border-radius: 18px;
+      width: 88%;
+      max-width: 480px;
+      box-shadow: 0 18px 60px rgba(9,6,12,0.55);
+      border: 1px solid rgba(120,50,30,0.06);
+    }
+
+  h1 { color: var(--muted); font-family: 'Playfair Display', serif; font-weight:700; margin: 0 0 12px; }
+
+    .card img { width: 220px; border-radius: 12px; margin-bottom: 12px; }
+
+    p { line-height: 1.5; font-size: 1.02rem; margin: 0 0 8px; }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(8px)}
+      to {opacity: 1; transform: translateY(0)}
+    }
+
+    /* Animaciones adicionales */
+    @keyframes cardOpen {
+      0% { transform: scale(0.92) translateY(10px); opacity: 0 }
+      60% { transform: scale(1.02) translateY(-6px); opacity: 1 }
+      100% { transform: scale(1) translateY(0); opacity: 1 }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(30px); opacity: 0 }
+      to { transform: translateX(0); opacity: 1 }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0 }
+      60% { transform: scale(1.06); opacity: 1 }
+      100% { transform: scale(1); opacity: 1 }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(18px); opacity: 0 }
+      to { transform: translateY(0); opacity: 1 }
+    }
+
+    /* clases utilitarias para disparar animaciones */
+    .animate-open { animation: cardOpen 520ms cubic-bezier(.2,.9,.3,1) both; }
+    .animate-slide-right { animation: slideInRight 420ms ease both; }
+    .animate-pop { animation: popIn 380ms cubic-bezier(.2,.9,.3,1) both; }
+    .animate-slide-up { animation: slideUp 420ms ease both; }
+
+    /* pequeña transición para los botones añadidos dinámicamente */
+    #buttons button { opacity: 0; transform: translateY(6px); }
+    #buttons .animate-btn { animation: popIn 360ms ease both; }
+
+    .sad img { width: 260px; border-radius: 20px; }
+
+    #buttons{ display:flex; gap:14px; justify-content:center; }
+
+    /* Estilos para la vista de la carta: NO modal, se comporta como una .card centrada */
+    #fullCarta {
+      display: none; /* se muestra con .active */
+      margin: 18px auto;
+      width: 88%;
+      max-width: 640px;
+      background: var(--card-bg);
+      color: var(--muted);
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 18px 60px rgba(9,6,12,0.55);
+      border: 1px solid rgba(120,50,30,0.06);
+    }
+
+    /* cuando está activa, se muestra en flujo como las demás cartas */
+    #fullCarta.active { display:block; }
+
+    /* imagen centrada y legible (como las otras imágenes, pero un poco más grande) */
+    #fullCarta img#fullCartaImg{
+      width: auto;
+      max-width: 520px;
+      max-height: 72vh;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    /* estado ampliado (zoom) cuando se usa, con escala moderada */
+    #fullCarta img#fullCartaImg.zoomed{
+      transform: scale(1.18);
+      transition: transform 220ms cubic-bezier(.2,.9,.3,1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+      cursor: zoom-out;
+      transform-origin: center center;
+    }
+
+    /* estilos para el botón de cerrar dentro de la carta */
+    #fullCarta button#closeFullCarta{
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      padding: 6px 8px;
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(4px);
+      color: var(--accent-contrast);
+    }
+    #fullCarta button#zoomCartaBtn{ font-size:16px; }
+
+    /* botones debajo de la carta */
+    #fullCarta .btn { margin-top: 8px; }
+
+    /* responsive */
+    @media (max-width:420px){
+      .card{ padding:18px; }
+      img{ width: 85vw; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Pantalla inicial -->
+  <div class="envelope active" id="envelope">
+     <img src="images/sobre.jpg.jpg" alt="Sobre de carta">
+    <h2 id="question">¿Quieres abrir la carta? 💌</h2>
+    <div id="buttons"></div>
+  </div>
+
+  <!-- Carta -->
+  <div class="card" id="card">
+     <img src="images/portada.jpg.jpg" alt="Imagen de amor">
+    <h1>Para mi bonito este 03 de octubre 💙</h1>
+    <p>Te amo mucho mi vida y sé que pasamos por muchas dificultades,<br>
+    pero me alegra haberlas superado contigo.<br><br>
+     Te amo con todo mi corazoncito 💖<br>
+    <b>Abraham David Ramos Gómez</b></p>
+  </div>
+
+  <!-- Imagen triste -->
+  <div class="sad" id="sad">
+     <img src="images/llorar.jpg.jpg" alt="Triste">
+    <h2> Qué triste... esperaba que quisieras abrirla 💔</h2>
+  </div>
+
+  <!-- Segunda carta (de Canva) -->
+  <div class="card" id="secondCard">
+     <h2> Esta es mi carta para ti </h2>
+    <p>He puesto mucho amor en cada detalle para ti mi vida. 💌</p>
+    <button class="btn" id="viewCartaBtn">Ver carta</button>
+  </div>
+
+  <!-- Vista de la carta grande (solo imagen) -->
+  <div class="card" id="fullCarta">
+    <button id="closeFullCarta" aria-label="Cerrar carta" style="position:absolute;right:18px;top:18px;background:transparent;border:none;color:var(--accent-contrast);font-size:22px;cursor:pointer;">✕</button>
+    <img src="images/carta.jpg.jpg" alt="Carta especial grande" id="fullCartaImg">
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
+      <button class="btn" id="zoomCartaBtn" title="Ampliar carta">🔍</button>
+      <button class="btn" id="showSecretBtn">Ver mensaje oculto</button>
+      <button class="btn" id="backFromCartaBtn">Volver</button>
+    </div>
+  </div>
+
+    <!-- Mensaje adicional -->
+  <div class="extra" id="extra">
+     <img src="images/jugar.jpg.jpg" alt="Mensaje adicional">
+    <h2> Si disculpa si soy egoísta...</h2>
+    <p>Pero quiero que me permitas volver a jugar contigo.<br>
+    En serio te amo mucho y disfruto mucho de tu compañía,<br>
+    disfruto mucho jugar contigo y sé que no lo merezco,<br>
+    pero verdaderamente quiero volver a jugar contigo.</p>
+  </div>
+
+  <!-- Música -->
+  <audio id="music" src="audio/mi_cancion.mp3.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
